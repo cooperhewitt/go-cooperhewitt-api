@@ -59,8 +59,9 @@ func (client *APIClient) ExecuteMethod(method string, params *url.Values) (APIRe
 
 	http_body, _ := ioutil.ReadAll(http_rsp.Body)
 
-	var rsp APIResponse
-	json.Unmarshal(http_body, &rsp)
+	var json_body APIResponse
+	json.Unmarshal(http_body, &json_body)
 
-	return rsp, nil
+	//rsp := json_body.(map[string]interface{})
+	return json_body, nil
 }

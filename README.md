@@ -34,6 +34,11 @@ This would yield:
 	$> echo -token ACCESS_TOKEN wub wub wub
 	map[echo:wub wub wub method:api.test.echo stat:ok]
 
+Note that as of this writing you've been returned a plain vanilla `Interface`
+with lower-case strings which are treated as private in Go so in order to access
+them you have to do the weird `data := rsp.(map[string]interface{})` trick
+because... computers?
+
 ## To do
 
 * Setting host and endpoint in constructor
