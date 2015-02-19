@@ -1,24 +1,28 @@
 package main
 
 import (
-       "flag"
-       "fmt"
-       "org.cooperhewitt/api"
-       "net/url"
+	"flag"
+	"fmt"
+	"net/url"
+	"org.cooperhewitt/api"
+	"strings"
 )
 
 func main() {
 
-     token := flag.String("token", "", "token")
-     flag.Parse()
+	token := flag.String("token", "", "token")
+	flag.Parse()
 
-     client := api.OAuth2Client(*token)
+	echo := flag.Args()
+	str := strings.Join(echo, " ")
 
-     method := "api.test.echo"
-     args := url.Values{}
-     args.Set("foo", "bar")
+	client := api.OAuth2Client(*token)
 
-     rsp, _ := client.ExecuteMethod(method, &args)
-     fmt.Printf("%v", rsp)
+	method := "api.test.echo"
+	args := url.Values{}
+	args.Set("echo", str)
+
+	rsp, _ := client.ExecuteMethod(method, &args)
+	fmt.Printf("%v", rsp)
 
 }

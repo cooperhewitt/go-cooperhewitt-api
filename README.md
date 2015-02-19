@@ -11,24 +11,28 @@ Assume this is a file called [echo.go](https://github.com/cooperhewitt/go-cooper
 		"fmt"
 		"net/url"
 		"org.cooperhewitt/api"
+		"strings"
 	)
 
 	token := flag.String("token", "", "token")
 	flag.Parse()
 
+	echo := flag.Args()
+	str := strings.Join(echo, " ")
+
 	client := api.OAuth2Client(*token)
 
 	method := "api.test.echo"
 	args := url.Values{}
-	args.Set("foo", "bar")
+	args.Set("echo", str)
 
 	rsp, _ := client.ExecuteMethod(method, &args)
 	fmt.Printf("%v", rsp)
 
 This would yield:
 
-	$> echo -token ACCESS_TOKEN
-	map[foo:bar method:api.test.echo stat:ok]
+	$> echo -token ACCESS_TOKEN wub wub wub
+	map[echo:wub wub wub method:api.test.echo stat:ok]
 
 ## To do
 
