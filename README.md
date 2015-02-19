@@ -4,6 +4,8 @@ Go language API library for the Cooper Hewitt API.
 
 ## Example
 
+	# Assume this is called [echo.go](https://github.com/cooperhewitt/go-cooperhewitt-api/blob/master/bin/echo.go)
+
 	import (
 		"flag"
 		"fmt"
@@ -25,6 +27,7 @@ Go language API library for the Cooper Hewitt API.
 
 This would yield:
 
+	$> echo -token ACCESS_TOKEN
 	map[foo:bar method:api.test.echo stat:ok]
 
 ## To do
