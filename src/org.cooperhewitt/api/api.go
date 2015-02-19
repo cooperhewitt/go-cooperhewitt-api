@@ -32,7 +32,7 @@ func OAuth2Client(token string) *APIClient {
 
 func (client *APIClient) ExecuteMethod(method string, params *url.Values) (APIResponse, error) {
 
-	url := "https://" + client.Host + "/" + client.Endpoint
+	url := client.scheme + "://" + client.Host + "/" + client.Endpoint
 	// fmt.Println(url)
 
 	params.Set("method", method)
