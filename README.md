@@ -4,7 +4,7 @@ Go language API library for the Cooper Hewitt API.
 
 ## Example
 
-Assume this is a file called [echo.go](https://github.com/cooperhewitt/go-cooperhewitt-api/blob/master/bin/echo.go)
+Assume this is a file called [echo.go](https://github.com/cooperhewitt/go-cooperhewitt-api/blob/master/bin/echo.go):
 
 	import (
 		"flag"
