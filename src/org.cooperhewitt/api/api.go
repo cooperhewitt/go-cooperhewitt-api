@@ -4,44 +4,64 @@ import (
        "io/ioutil"
        "net/http"
        "net/url"
-       "fmt"
+       "encoding/json"
+       _ "fmt"
 )
 
-type API struct {
+type APIClient struct {
      token string
+     scheme string
+     host string
      endpoint string
+     isa string
 }
 
-func Client(token string) *API {
+// http://blog.golang.org/json-and-go
+type APIResponse interface {}
 
-     return &API{
+func OAuth2Client(token string) *APIClient {
+
+     return &APIClient{
      	    token: token,
-	    endpoint: "https://api.collection.cooperhewitt.org/rest/",
+	    scheme: "https",
+	    host: "api.collection.cooperhewitt.org",
+	    endpoint: "rest/",
+	    isa: "oauth2",
      }
 }
 
-func (api *API) ExecuteMethod (method string, params *url.Values) ([]byte, error) {
+func (client *APIClient) ExecuteMethod (method string, params *url.Values) (APIResponse, error) {
+
+        url := "https://" + client.host + "/" + client.endpoint
 
 	params.Set("method",  method)
-	params.Set("access_token", api.token)
+	params.Set("access_token", client.token)
 
-	req, err := http.NewRequest("POST", api.endpoint, nil)
-	req.URL.RawQuery = (*params).Encode()
+	http_req, err := http.NewRequest("POST", url, nil)
+	http_req.URL.RawQuery = (*params).Encode()
 
-	client := &http.Client{}
-	rsp, err := client.Do(req)
+        http_req.Header.Add("Accept-Encoding", "gzip")
+
+	http_client := &http.Client{}
+	http_rsp, err := http_client.Do(http_req)
 
 	if err != nil {
         	panic(err)
 	}
 
-	defer rsp.Body.Close()
+	defer http_rsp.Body.Close()
 
+	/*
 	fmt.Println("response Status:", rsp.Status)
 	fmt.Println("response Headers:", rsp.Header)
+	*/
 
-	body, _ := ioutil.ReadAll(rsp.Body)
-	return body, nil
+	http_body, _ := ioutil.ReadAll(http_rsp.Body)
+
+	var rsp APIResponse
+	json.Unmarshal(http_body, &rsp)
+
+	return rsp, nil
 }
 
 
