@@ -72,6 +72,7 @@ actual JSON (in all it's unknowiness) returned by the API endpoint.
 * Support for multipart-mime uploads (just because, you can't actually do those in the API)
 * Better internal logging
 * Proper documentation
+* Update to derive most functionality from https://github.com/straup/go-flamework-api
 
 ## See also
 
