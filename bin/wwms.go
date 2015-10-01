@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"org.cooperhewitt/api"
+	"os"
 )
 
 func main() {
@@ -17,12 +18,25 @@ func main() {
 	method := "cooperhewitt.labs.whatWouldMicahSay"
 	args := url.Values{}
 
-	rsp, _ := client.ExecuteMethod(method, &args)
+	rsp, err := client.ExecuteMethod(method, &args)
 
-	// Go is weird...
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to call %s, because '%s'\n", method, err)
+		os.Exit(1)
+	}
 
-	data := rsp.(map[string]interface{})
-	micah := data["micah"].(map[string]interface{})
+	_, api_err := rsp.Ok()
 
-	fmt.Println(micah["says"])
+	if api_err != nil {
+		fmt.Fprintf(os.Stderr, "Failed to execute %s, because '%s'\n", method, api_err.Message)
+		os.Exit(1)
+	}
+
+	body := rsp.Body()
+
+	var says string
+	says, _ = body.Path("micah.says").Data().(string)
+
+	fmt.Println(says)
+	os.Exit(0)
 }

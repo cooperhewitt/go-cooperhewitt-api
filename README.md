@@ -6,47 +6,74 @@ Go language API library for the Cooper Hewitt API.
 
 Assume this is a file called [echo.go](https://github.com/cooperhewitt/go-cooperhewitt-api/blob/master/bin/echo.go):
 
-	import (
-		"flag"
-		"fmt"
-		"net/url"
-		"org.cooperhewitt/api"
-		"strings"
-	)
+```
+package main
+
+import (
+	"flag"
+	"fmt"
+	"net/url"
+	"org.cooperhewitt/api"
+	"os"
+	"strings"
+)
+
+func main() {
 
 	token := flag.String("token", "", "token")
 	flag.Parse()
 
-	echo := flag.Args()
-	str := strings.Join(echo, " ")
+	args := flag.Args()
+	call := strings.Join(args, " ")
 
 	client := api.OAuth2Client(*token)
 
 	method := "api.test.echo"
-	args := url.Values{}
-	args.Set("echo", str)
+	params := url.Values{}
+	params.Set("echo", call)
 
-	rsp, _ := client.ExecuteMethod(method, &args)
-	fmt.Printf("%v", rsp)
+	rsp, err := client.ExecuteMethod(method, &params)
+
+	if err != nil {
+		os.Exit(1)
+	}
+
+	_, api_err := rsp.Ok()
+
+	if api_err != nil {
+		os.Exit(1)
+	}
+
+	body := rsp.Body()
+
+	var response string
+	response, _ = body.Path("echo").Data().(string)
+
+	fmt.Println(response)
+	os.Exit(0)
+}
+```
 
 This would yield:
 
-	$> echo -token ACCESS_TOKEN wub wub wub
-	map[echo:wub wub wub method:api.test.echo stat:ok]
+```
+$> echo -token ACCESS_TOKEN wub wub wub
+wub wub wub
+```
 
-Note that as of this writing you've been returned a plain vanilla `Interface`
-with lower-case strings which are treated as private in Go so in order to access
-them you have to do the weird `data := rsp.(map[string]interface{})` trick
-because... computers?
+The `Body` method for API responses returns
+[gabs.Container](https://github.com/jeffail/gabs) thingy for wrangling the
+actual JSON (in all it's unknowiness) returned by the API endpoint.
 
 ## To do
 
+* APIError blobs are not recording error codes correctly
 * Setting host and endpoint in constructor
 * Support for multipart-mime uploads (just because, you can't actually do those in the API)
-* Better error handling (currently freaks out and dies)
 * Better internal logging
 * Proper documentation
 
 ## See also
 
 * https://collection.cooperhewitt.org/api/
+* https://github.com/jeffail/gabs
