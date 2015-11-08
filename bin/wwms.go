@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/cooperhewitt/go-cooperhewitt-api"
 	"net/url"
-	"org.cooperhewitt/api"
 	"os"
 )
 
