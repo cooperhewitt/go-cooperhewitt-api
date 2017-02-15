@@ -2,6 +2,10 @@
 
 Go language API library for the Cooper Hewitt API.
 
+## How this Fits
+
+This is one of many libraries that allow anyone to easily connect their application to the Cooper Hewitt API. This one is written in Go.
+
 ## Example
 
 Assume this is a file called [echo.go](https://github.com/cooperhewitt/go-cooperhewitt-api/blob/master/bin/echo.go):
